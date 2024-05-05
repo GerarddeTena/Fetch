@@ -11,8 +11,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 5rem;
-    gap: 5rem;
+    margin-top: 2.5rem;
+    gap: 2.5rem;
     background: #424242;
     border-radius: .15rem;
     width: 75%;
@@ -25,20 +25,14 @@
         bottom: 2%;
     }
     & .List_Container{
-        width: 100%;
-        background: lightblue;
+        background: #a8a8a8;
+        border: 2px solid white;
+        border-radius: .25rem;
         & .Task_List {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            width: 25rem;
             height: 5rem;
-            border-radius: .15rem;
-            & .Items_List {
-                display: flex;
-                width: 15rem;
-            }
-
         }
         button,
         .Close {
@@ -148,8 +142,7 @@
     max-height: 25vh;
     overflow: scroll;
 }
-
-
+ 
 .Modal_Appear {
     animation: Appear 500ms linear forwards;
 }

@@ -1,19 +1,20 @@
 html {
+    height: 100%; 
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    background: linear-gradient(45deg, rgb(56, 80, 90), rgb(37, 97, 75), rgb(52, 57, 19));
+    background-size: 200rem 200rem;
+    background-repeat: no-repeat;
+    animation: backgroundTransition 13s alternate infinite;
+
 }
 
 body {
-    background: linear-gradient(-45deg, rgb(56, 80, 90), rgb(37, 97, 75), rgb(52, 57, 19));
-    background-size: 200rem 200rem;
-    animation: backgroundTransition 13s alternate infinite;
-
     & #root {
         display: flex;
         justify-content: center;
         align-items: center;
-
     }
 }
 
@@ -21,14 +22,14 @@ body {
 @keyframes backgroundTransition {
 
     0% {
-        background-position: 0 50%
+        background-position: 0 50%;
     }
 
     50% {
-        background-position: 50% 100%
+        background-position: 50% 100%;
     }
 
     100% {
-        background-position: 100% 50%
+        background-position: 100% 50%;
     }
 }
