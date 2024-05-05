@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import './Modal.css';
 import {Box, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 
 const Modal = ({ modal, modalState, task, category, setTask, Submit, Cancel, dropDownChange}) => {
