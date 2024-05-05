@@ -16,6 +16,47 @@ const ToDoList = () => {
     const [renderedList, setRenderedList] = useState([]);
     const [availableCategories, setAvailableCategories] = useState(['Studies', 'Home tasks', 'Important', 'Day tasks']);
 
+    useEffect(() => {
+        fetchTodos();
+    }, []);
+
+    const fetchTodos = async () => {
+        try {
+            const response = await fetch("https://playground.4geeks.com/todo/users/pro_players");
+            if (!response.ok) {
+                throw new Error("Failed to fetch todos");
+            }
+            const data = await response.json();
+            setList(data.todos);
+        } catch (error) {
+            console.error("Error fetching todos:", error);
+        }
+    };
+
+    const addTask = async () => {
+        try {
+            const response = await fetch("https://playground.4geeks.com/todo/todos/pro_players", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    label: task,
+                    is_done: false
+                })
+            });
+            if (!response.ok) {
+                throw new Error("Failed to add task");
+            }
+            const newTask = await response.json();
+            setList([...list, newTask]);
+            setTask('');
+            setCategory(category);
+            openModal();
+        } catch (error) {
+            console.error("Error adding task:", error);
+        }
+    };
 
     const dropDownChange = (e) => {
         setCategory(e.target.value)
@@ -31,57 +72,57 @@ const ToDoList = () => {
         openModal();
     }
 
-    const RemoveTask = () => {
-        const updatedList = list.filter(item => !item.selected);
-        setList(updatedList);
-    }
+    const RemoveTask = async (id) => {
+        try {
+            const response = await fetch(`https://playground.4geeks.com/todo/todos/${id}`, { method: "DELETE",});
+
+            if(!response.ok) {
+                throw new Error("Failed to delete task");
+            }
+            const updatedList = list.filter(item => item.id !== id);
+            setList(updatedList);
+        }catch(error) {
+            console.error("Error adding task:", error);
+        }
+    };
 
     const Submit = (e) => {
         e.preventDefault();
-
-        const newTask = {
-            done: {
-                task: task,
-                category: category,
-            },
-            selected: false
-        }
-
-        setList([...list, newTask]);
-        setTask('');
-        setCategory(category);
-        openModal();
+        addTask();
     }
 
-
-    const selectedItem = (index) => {
+    const selectedItem = (id) => {
         setList(prevList => {
-            const updatedList = [...prevList];
-            updatedList[index].selected = !updatedList[index].selected;
-            return updatedList;
+            return prevList.map(item => {
+                if (item.id === id) {
+                    return {
+                        ...item,
+                        is_done: !item.is_done
+                    };
+                }
+                return item;
+            });
         });
         setCategory(category)
     }
+
     useEffect(() => {
         const newList = list.map((item, index) => (
-
-                <div className='List_Container'>
-                    <ListItem key={index}>
-                        <Checkbox
-                            checked={item.selected}
-                            onChange={() => selectedItem(index)}
-                        />
-                        <ListItemText primary={item.done.task} secondary={item.done.category}/>
-                        {item.selected && (
-                            <ListItemSecondaryAction>
-                                <IconButton edge="end" aria-label="delete" onClick={RemoveTask}>
-                                    <DeleteIcon color='#fff'/>
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        )}
-                    </ListItem>
-                    <Divider/>
-                </div>
+            <div className='List_Container' key={index}>
+                <ListItem>
+                    <Checkbox
+                        checked={item.is_done}
+                        onChange={() => selectedItem(item.id)}
+                    />
+                    <ListItemText primary={item.label} secondary={item.category}/>
+                    <ListItemSecondaryAction>
+                        <IconButton edge="end" aria-label="delete" onClick={() => RemoveTask(item.id)}>
+                            <DeleteIcon color='#fff'/>
+                        </IconButton>
+                    </ListItemSecondaryAction>
+                </ListItem>
+                <Divider/>
+            </div>
         ));
         setRenderedList(newList);
     }, [list]);
